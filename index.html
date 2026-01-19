@@ -2,379 +2,272 @@
 <html lang="zh-HK">
 <head>
   <meta charset="UTF-8" />
-  <title>Photo Location Explorer</title>
+  <title>StandHere 打打卡 | 企啱位，重現決定性瞬間</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <style>
     :root {
-      --text-main: #111;
-      --text-sub: #666;
-      --bg-light: #fafafa;
-      --card-bg: #fff;
-      --radius: 16px;
+      --text-main: #eeeeee;
+      --text-sub: #aaaaaa;
+      --bg-body: #0a0a0a; /* 更深的背景，營造專業感 */
+      --bg-light: #161616;
+      --card-bg: #1e1e1e;
+      --accent-color: #f5c518; 
+      --border-color: rgba(255, 255, 255, 0.08);
+      --radius: 12px;
     }
 
-    * {
-      box-sizing: border-box;
-    }
+    * { box-sizing: border-box; }
 
     body {
       margin: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
-        Roboto, "Noto Sans TC", sans-serif;
+      font-family: 'Inter', -apple-system, sans-serif;
       color: var(--text-main);
-      background: #fff;
+      background: var(--bg-body);
       line-height: 1.6;
+      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
     }
 
-    h1, h2, h3 {
-      margin: 0 0 12px;
-      line-height: 1.3;
-    }
-
-    h1 {
-      font-size: 42px;
-      font-weight: 700;
-    }
-
-    h2 {
-      font-size: 28px;
-    }
-
-    p {
-      margin: 0;
-      color: var(--text-sub);
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    section {
-      padding: 80px 24px;
-      max-width: 1200px;
-      margin: auto;
-    }
-
-    /* ================= HEADER ================= */
     header {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      z-index: 1000;
-      background: rgba(255,255,255,0.85);
-      backdrop-filter: blur(10px);
-      border-bottom: 1px solid rgba(0,0,0,0.05);
+      top: 0; width: 100%; z-index: 1000;
+      background: rgba(10, 10, 10, 0.8);
+      backdrop-filter: blur(20px);
+      border-bottom: 1px solid var(--border-color);
     }
 
     .nav-container {
-      max-width: 1200px;
-      margin: auto;
-      padding: 16px 24px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      max-width: 1200px; margin: auto; padding: 14px 24px;
+      display: flex; align-items: center; justify-content: space-between;
     }
 
     .logo {
-      font-weight: 700;
-      font-size: 18px;
-      letter-spacing: 0.5px;
+      font-weight: 900; font-size: 22px; letter-spacing: -0.5px;
+      color: var(--accent-color);
     }
 
-    nav a {
-      margin-left: 24px;
-      font-size: 15px;
-      color: var(--text-main);
-    }
+    nav a { margin-left: 24px; font-size: 14px; font-weight: 600; text-decoration: none; color: var(--text-sub); transition: 0.3s; }
+    nav a:hover { color: var(--accent-color); }
 
-    nav a:hover {
-      text-decoration: underline;
-    }
-
-    /* Offset for fixed header */
-    .spacer {
-      height: 72px;
-    }
-
-    /* ================= HERO ================= */
+    /* ====== HERO: 強化「目標」導向 ====== */
     .hero {
-      min-height: 90vh;
-      background:
-        linear-gradient(to bottom, rgba(0,0,0,0.4), rgba(0,0,0,0.7)),
-        url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee")
-        center / cover no-repeat;
-      color: white;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
+      height: 85vh;
+      background: linear-gradient(to bottom, rgba(10,10,10,0.2), rgba(10,10,10,1)),
+                  url("https://images.unsplash.com/photo-1500530855697-b586d89ba3ee") center/cover;
+      display: flex; align-items: center; justify-content: center; text-align: center;
       padding: 24px;
     }
 
-    .hero-content {
-      max-width: 720px;
-    }
+    .hero-content h1 { font-size: clamp(40px, 6vw, 72px); font-weight: 800; margin-bottom: 20px; letter-spacing: -2px; }
+    .hero-content p { font-size: 20px; color: var(--text-sub); max-width: 600px; margin: 0 auto 40px; }
 
-    .hero p {
-      margin-top: 16px;
-      font-size: 18px;
-      color: #ddd;
+    /* 重點按鈕：強調「領取攻略」 */
+    .hero-btn {
+      background: var(--accent-color); color: #000;
+      padding: 18px 48px; border-radius: 99px; font-weight: 800;
+      font-size: 18px; border: none; cursor: pointer;
+      box-shadow: 0 10px 30px rgba(245, 197, 24, 0.3);
+      transition: 0.3s;
     }
+    .hero-btn:hover { transform: translateY(-5px); box-shadow: 0 15px 40px rgba(245, 197, 24, 0.5); }
 
-    .hero button {
-      margin-top: 32px;
-      padding: 14px 36px;
-      font-size: 16px;
-      border: none;
-      border-radius: 999px;
-      background: white;
-      color: #111;
-      cursor: pointer;
-    }
+    section { padding: 100px 24px; max-width: 1200px; margin: auto; }
 
-    /* ================= GRID ================= */
-    .grid {
-      display: grid;
-      gap: 24px;
-    }
+    h2 { font-size: 32px; font-weight: 800; margin-bottom: 40px; }
+    h2 span { color: var(--accent-color); font-size: 16px; display: block; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
 
-    .grid-3 {
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    }
+    /* ====== MISSION CARDS: 攻略感視覺 ====== */
+    .grid { display: grid; gap: 30px; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); }
 
-    /* CATEGORY */
-    .category {
-      padding: 32px;
-      background: var(--bg-light);
-      border-radius: var(--radius);
-      font-size: 18px;
-      text-align: center;
-      transition: transform 0.2s, box-shadow 0.2s;
-      cursor: pointer;
-    }
-
-    .category:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.08);
-    }
-
-    /* CARD */
     .card {
-      background: var(--card-bg);
-      border-radius: var(--radius);
-      overflow: hidden;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
-      transition: transform 0.2s;
+      background: var(--card-bg); border-radius: var(--radius); overflow: hidden;
+      border: 1px solid var(--border-color); transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+      position: relative;
     }
 
-    .card:hover {
-      transform: translateY(-6px);
+    .card:hover { transform: translateY(-10px); border-color: var(--accent-color); }
+
+    /* 圖片上的攻略標籤 */
+    .card-badge {
+      position: absolute; top: 15px; left: 15px;
+      background: rgba(0,0,0,0.7); backdrop-filter: blur(5px);
+      padding: 6px 12px; border-radius: 6px; font-size: 12px; font-weight: 700;
+      color: var(--accent-color); z-index: 2; border: 1px solid var(--accent-color);
     }
 
-    .card img {
-      width: 100%;
-      height: 220px;
-      object-fit: cover;
-      display: block;
-    }
+    .card-img-container { height: 220px; position: relative; overflow: hidden; }
+    .card-img-container img { width: 100%; height: 100%; object-fit: cover; transition: 0.5s; }
+    .card:hover img { transform: scale(1.1); }
 
-    .card-content {
-      padding: 16px;
-    }
+    .card-content { padding: 24px; }
+    .card-title { font-size: 20px; font-weight: 700; margin-bottom: 10px; display: flex; justify-content: space-between; align-items: center; }
+    
+    /* 座標樣式 */
+    .coords { font-family: monospace; font-size: 12px; color: var(--accent-color); opacity: 0.8; }
+    
+    .card-info { display: flex; justify-content: space-between; margin-top: 15px; padding-top: 15px; border-top: 1px solid var(--border-color); }
+    .info-item { text-align: left; }
+    .info-item label { display: block; font-size: 11px; color: var(--text-sub); text-transform: uppercase; letter-spacing: 1px; }
+    .info-item span { font-size: 14px; font-weight: 600; }
 
-    .card-content p {
-      font-size: 15px;
-      color: var(--text-main);
-      font-weight: 500;
-    }
+    /* ====== HOW IT WORKS: 強化工具屬性 ====== */
+    .step-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 40px; }
+    .step-card { padding: 40px; background: var(--bg-light); border-radius: 20px; position: relative; border: 1px solid var(--border-color); }
+    .step-num { font-size: 48px; font-weight: 900; color: rgba(245, 197, 24, 0.1); position: absolute; top: 20px; right: 30px; }
+    .step-card h3 { font-size: 22px; color: var(--accent-color); margin-bottom: 15px; }
 
-    .card-content span {
-      display: block;
-      margin-top: 4px;
-      font-size: 13px;
-      color: var(--text-sub);
+    /* ====== CTA: 激發參與 ====== */
+    .cta-box {
+      background: linear-gradient(135deg, #1e1e1e 0%, #121212 100%);
+      padding: 80px 40px; border-radius: 30px; text-align: center;
+      border: 1px solid var(--accent-color); box-shadow: 0 20px 50px rgba(0,0,0,0.5);
     }
+    .cta-box h2 { margin-bottom: 20px; }
+    .cta-box p { margin-bottom: 40px; color: var(--text-sub); font-size: 18px; }
 
-    /* HOW IT WORKS */
-    .steps {
-      display: grid;
-      gap: 32px;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      text-align: center;
-    }
-
-    .step {
-      padding: 32px;
-      background: var(--bg-light);
-      border-radius: var(--radius);
-    }
-
-    /* PHOTOGRAPHER */
-    .photographer {
-      background: var(--bg-light);
-      border-radius: var(--radius);
-      padding: 48px;
-      text-align: center;
-    }
-
-    .photographer a {
-      display: inline-block;
-      margin-top: 16px;
-      font-weight: 600;
-    }
-
-    /* FOOTER */
-    footer {
-      padding: 48px 24px;
-      background: #111;
-      color: #aaa;
-      text-align: center;
-    }
-
-    footer a {
-      color: #aaa;
-      margin: 0 8px;
-      font-size: 14px;
-    }
-
-    @media (max-width: 600px) {
-      h1 {
-        font-size: 32px;
-      }
-
-      nav a {
-        margin-left: 16px;
-      }
-    }
   </style>
 </head>
 
 <body>
 
-  <!-- HEADER -->
   <header>
     <div class="nav-container">
-      <div class="logo">Photo Explorer</div>
+      <div class="logo">StandHere</div>
       <nav>
-        <a href="#">Explore</a>
-        <a href="#">Locations</a>
-        <a href="#">Submit</a>
-        <a href="#">About</a>
+        <a href="#">攻略地圖</a>
+        <a href="#">本月目標</a>
+        <a href="#">攝影師入口</a>
       </nav>
     </div>
   </header>
 
-  <!-- Spacer for fixed header -->
-  <div class="spacer"></div>
-
-  <!-- HERO -->
   <div class="hero">
     <div class="hero-content">
-      <h1>喺正確時間，企喺正確位置</h1>
-      <p>探索可以被重現的風景照片，為旅行與攝影而設。</p>
-      <button>開始探索</button>
+      <h1>咪再亂撞，<br>企喺呢度就影到。</h1>
+      <p>唔係睇靚相，而係俾你複製靚相。精確座標、焦段建議、光影窗口，全部攻略一鍵領取。</p>
+      <button class="hero-btn">領取拍攝任務</button>
     </div>
   </div>
 
-  <!-- CATEGORIES -->
   <section>
-    <h2>快速探索</h2>
-    <div class="grid grid-3">
-      <div class="category">🌇 日落</div>
-      <div class="category">🌃 夜景</div>
-      <div class="category">🏔 山景</div>
-      <div class="category">🌊 海岸</div>
-      <div class="category">🏙 城市</div>
-      <div class="category">🍁 季節限定</div>
-    </div>
-  </section>
-
-  <!-- EDITOR PICKS -->
-  <section>
-    <h2>精選照片</h2>
-    <div class="grid grid-3">
+    <h2><span>Target Missions</span>本週挑戰目標</h2>
+    <div class="grid">
+      
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+        <div class="card-badge">難度：⭐⭐</div>
+        <div class="card-img-container">
+          <img src="https://images.unsplash.com/photo-1501785888041-af3ef285b470">
+        </div>
         <div class="card-content">
-          <p>Mount Fuji</p>
-          <span>最佳月份：12 月 · 日落</span>
+          <div class="card-title">
+            Mount Fuji 經典構圖
+            <div class="coords">35.3606° N</div>
+          </div>
+          <div class="card-info">
+            <div class="info-item">
+              <label>最佳窗口</label>
+              <span>12月 16:45</span>
+            </div>
+            <div class="info-item">
+              <label>裝備建議</label>
+              <span>70-200mm</span>
+            </div>
+            <div class="info-item">
+              <label>重現率</label>
+              <span>95%</span>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d">
+        <div class="card-badge">難度：⭐⭐⭐⭐</div>
+        <div class="card-img-container">
+          <img src="https://images.unsplash.com/photo-1491553895911-0055eca6402d">
+        </div>
         <div class="card-content">
-          <p>Tokyo Night View</p>
-          <span>全年 · 夜景</span>
+          <div class="card-title">
+            Tokyo Cyberpunk Night
+            <div class="coords">35.6895° N</div>
+          </div>
+          <div class="card-info">
+            <div class="info-item">
+              <label>最佳窗口</label>
+              <span>雨後 19:00</span>
+            </div>
+            <div class="info-item">
+              <label>裝備建議</label>
+              <span>35mm f/1.4</span>
+            </div>
+            <div class="info-item">
+              <label>重現率</label>
+              <span>60%</span>
+            </div>
+          </div>
         </div>
       </div>
+
       <div class="card">
-        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429">
+        <div class="card-badge">難度：⭐⭐⭐</div>
+        <div class="card-img-container">
+          <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429">
+        </div>
         <div class="card-content">
-          <p>Iceland Coast</p>
-          <span>冬季 · 黃昏</span>
+          <div class="card-title">
+            Icelandic Blue Ice
+            <div class="coords">64.1265° N</div>
+          </div>
+          <div class="card-info">
+            <div class="info-item">
+              <label>最佳窗口</label>
+              <span>1月 漲潮</span>
+            </div>
+            <div class="info-item">
+              <label>裝備建議</label>
+              <span>超廣角 + ND</span>
+            </div>
+            <div class="info-item">
+              <label>重現率</label>
+              <span>80%</span>
+            </div>
+          </div>
         </div>
       </div>
+
     </div>
   </section>
 
-  <!-- LOCATIONS -->
+  <section style="background: #0f0f0f;">
+    <h2><span>The Workflow</span>點樣重現經典？</h2>
+    <div class="step-grid">
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>揀選目標</h3>
+        <p>搵出你想重現嘅畫面，查看背後隱藏嘅拍攝攻略。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>鎖定時空</h3>
+        <p>根據 GPS 座標與推薦季節，預約你嘅攝影行程。</p>
+      </div>
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>企好位置</h3>
+        <p>參考「站位示意圖」與焦段建議，按下快門，100% 重現。</p>
+      </div>
+    </div>
+  </section>
+
   <section>
-    <h2>熱門地點</h2>
-    <div class="grid grid-3">
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1549692520-acc6669e2f0c">
-        <div class="card-content"><p>Tokyo</p></div>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1505761671935-60b3a7427bad">
-        <div class="card-content"><p>Hong Kong</p></div>
-      </div>
-      <div class="card">
-        <img src="https://images.unsplash.com/photo-1500534314209-a25ddb2bd429">
-        <div class="card-content"><p>Iceland</p></div>
-      </div>
+    <div class="cta-box">
+      <h2>你有「神級站位」想分享？</h2>
+      <p>加入 StandHere 攝影師行列，將你嘅精確站位變成他人嘅朝聖地。</p>
+      <button class="hero-btn" style="background: transparent; color: var(--accent-color); border: 2px solid var(--accent-color); box-shadow: none;">提交你嘅拍攝攻略</button>
     </div>
   </section>
 
-  <!-- HOW IT WORKS -->
-  <section>
-    <h2>如何運作</h2>
-    <div class="steps">
-      <div class="step">
-        <h3>探索照片</h3>
-        <p>以構圖為主導開始探索</p>
-      </div>
-      <div class="step">
-        <h3>查看時間與位置</h3>
-        <p>清楚知道最佳拍攝時機</p>
-      </div>
-      <div class="step">
-        <h3>親身前往拍攝</h3>
-        <p>在現場重現畫面</p>
-      </div>
-    </div>
-  </section>
-
-  <!-- PHOTOGRAPHER -->
-  <section>
-    <div class="photographer">
-      <h2>你係攝影者？</h2>
-      <p>分享你嘅作品，幫更多人影到同一個畫面。</p>
-      <a href="#">提交作品 →</a>
-    </div>
-  </section>
-
-  <!-- FOOTER -->
-  <footer>
-    <p>© 2026 Photo Location Explorer</p>
-    <p>
-      <a href="#">About</a> ·
-      <a href="#">Contact</a> ·
-      <a href="#">Submit Photo</a>
-    </p>
+  <footer style="padding: 60px 24px; text-align: center; border-top: 1px solid var(--border-color); color: #444;">
+    <p>© 2026 StandHere 打打卡 · 企啱位，先影到</p>
   </footer>
 
 </body>
