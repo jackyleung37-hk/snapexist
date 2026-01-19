@@ -1,244 +1,284 @@
 <!DOCTYPE html>
-<html lang="zh-HK">
-<head>
-<meta charset="UTF-8">
-<title>任務攻略｜StandHere 打打卡</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-  :root {
-    --accent-color: #f5c518; 
-    --bg-body: #0a0a0a;
-    --bg-light: #161616;
-    --card-bg: #1e1e1e;
-    --border-color: rgba(255, 255, 255, 0.08);
-    --text-main: #eeeeee;
-    --text-sub: #888888;
-    --warn: #ff4d00;
-    --radius: 12px;
-  }
-
-  * { box-sizing: border-box; }
-
-  body {
-    margin: 0;
-    background: var(--bg-body);
-    color: var(--text-main);
-    font-family: 'Inter', -apple-system, sans-serif;
-    line-height: 1.6;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
-  }
-
-  header {
-    position: fixed; top: 0; width: 100%; z-index: 1000;
-    background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border-color);
-    padding: 14px 32px; display: flex; justify-content: space-between; align-items: center;
-  }
-
-  .logo { font-weight: 900; font-size: 20px; color: var(--accent-color); text-decoration: none; }
-
-  .spacer { height: 70px; }
-
-  /* ====== Layout ====== */
-  .layout {
-    display: grid; grid-template-columns: 1fr 400px; gap: 40px;
-    max-width: 1300px; margin: 30px auto; padding: 0 24px;
-  }
-
-  /* 左邊：任務視覺視覺區 */
-  .mission-visual { position: sticky; top: 90px; }
-  .mission-header { margin-bottom: 24px; }
-  .mission-header h1 { font-size: 32px; font-weight: 800; margin: 0; }
-  .mission-header .badge {
-    display: inline-block; background: var(--accent-color); color: #000;
-    padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 800;
-    margin-bottom: 8px; text-transform: uppercase;
-  }
-
-  .main-img-container {
-    position: relative; border-radius: var(--radius); overflow: hidden;
-    border: 1px solid var(--border-color); box-shadow: 0 30px 60px rgba(0,0,0,0.6);
-  }
-  .main-img-container img { width: 100%; display: block; filter: brightness(0.9); }
-  
-  /* 圖片上的「重現標記」 */
-  .replicate-overlay {
-    position: absolute; bottom: 20px; right: 20px;
-    background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
-    padding: 15px; border-radius: 8px; border: 1px solid var(--accent-color);
-    text-align: center;
-  }
-  .replicate-overlay span { display: block; font-size: 10px; color: var(--accent-color); font-weight: 700; }
-  .replicate-overlay b { font-size: 20px; color: #fff; }
-
-  /* 右邊：攻略面板 */
-  .info-column { display: flex; flex-direction: column; gap: 20px; }
-
-  .card {
-    background: var(--card-bg); border: 1px solid var(--border-color);
-    border-radius: var(--radius); padding: 24px;
-  }
-
-  .card-label { 
-    font-size: 11px; font-weight: 700; color: var(--accent-color); 
-    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; display: block;
-  }
-
-  /* 數據面板樣式 */
-  .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
-  .data-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); }
-  .data-item label { display: block; font-size: 11px; color: var(--text-sub); }
-  .data-item span { font-size: 14px; font-weight: 600; color: #fff; }
-
-  /* 站位圖佔位 */
-  .positioning-map {
-    height: 180px; background: #111; border-radius: 8px; margin: 15px 0;
-    display: flex; align-items: center; justify-content: center;
-    border: 1px solid var(--border-color); position: relative;
-    overflow: hidden;
-  }
-  .position-point {
-    width: 20px; height: 20px; background: var(--accent-color); border-radius: 50%;
-    box-shadow: 0 0 15px var(--accent-color); animation: pulse 2s infinite;
-  }
-  @keyframes pulse { 0% {transform: scale(1); opacity: 1;} 100% {transform: scale(2.5); opacity: 0;} }
-
-  .instruction-box {
-    background: rgba(245, 197, 24, 0.05); border-left: 3px solid var(--accent-color);
-    padding: 15px; font-size: 14px; color: #ddd; margin: 15px 0;
-  }
-
-  .warning-box {
-    background: rgba(255, 77, 0, 0.1); border: 1px solid var(--warn);
-    padding: 12px; border-radius: 8px; color: #ff9d73; font-size: 13px;
-  }
-
-  .btn-primary {
-    display: block; width: 100%; padding: 16px; background: var(--accent-color);
-    color: #000; text-align: center; text-decoration: none; border-radius: 99px;
-    font-weight: 800; font-size: 16px; transition: 0.3s;
-    margin-top: 10px; box-shadow: 0 10px 20px rgba(245, 197, 24, 0.2);
-  }
-  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(245, 197, 24, 0.4); }
-
-  footer { text-align: center; padding: 60px; color: #444; font-size: 12px; border-top: 1px solid var(--border-color); }
-
-  @media (max-width: 900px) {
-    .layout { grid-template-columns: 1fr; }
-    .mission-visual { position: static; }
-  }
-</style>
+<html class="dark" lang="zh-Hant"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Photo Insight - PhotoSpotter</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#F5C518",
+                        "primary-hover": "#DBB015",
+                        "background-dark": "#050505",
+                        "card-dark": "#121212",
+                        "border-dark": "#1E1E1E",
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans", "sans-serif"]
+                    },
+                    borderRadius: {
+                        "DEFAULT": "0.25rem",
+                        "lg": "0.5rem",
+                        "xl": "0.75rem",
+                        "full": "9999px"
+                    },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        body {
+            font-family: "Plus Jakarta Sans", sans-serif;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 6px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: transparent;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #2A2A2A;
+            border-radius: 10px;
+        }
+    </style>
 </head>
-
-<body>
-
-<header>
-  <a href="#" class="logo">StandHere</a>
-  <nav>
-    <a href="#">任務地圖</a>
-    <a href="#">攻略列表</a>
-  </nav>
+<body class="bg-background-dark text-slate-100 min-h-screen selection:bg-primary selection:text-black">
+<header class="sticky top-0 z-50 w-full border-b border-border-dark bg-background-dark/95 backdrop-blur-md px-4 lg:px-10 py-3">
+<div class="max-w-[1440px] mx-auto flex items-center justify-between">
+<div class="flex items-center gap-10">
+<a class="flex items-center gap-3 text-primary" href="#">
+<div class="size-6">
+<svg fill="none" viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M24 4C25.7818 14.2173 33.7827 22.2182 44 24C33.7827 25.7818 25.7818 33.7827 24 44C22.2182 33.7827 14.2173 25.7818 4 24C14.2173 22.2182 22.2182 14.2173 24 4Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-white text-xl font-extrabold leading-tight tracking-tight">PhotoSpotter</h2>
+</a>
+<nav class="hidden lg:flex items-center gap-8">
+<a class="text-slate-300 hover:text-primary text-sm font-bold transition-colors tracking-wide" href="#">探索</a>
+<a class="text-slate-300 hover:text-primary text-sm font-bold transition-colors tracking-wide" href="#">地圖</a>
+<a class="text-slate-300 hover:text-primary text-sm font-bold transition-colors tracking-wide" href="#">貢獻者</a>
+</nav>
+</div>
+<div class="flex items-center gap-6 lg:gap-8">
+<div class="hidden md:flex items-center gap-3 bg-card-dark px-3 py-1.5 rounded-full border border-border-dark">
+<button class="text-[11px] font-bold text-primary transition-colors">繁</button>
+<span class="text-slate-700 text-[10px]">/</span>
+<button class="text-[11px] font-bold text-slate-500 hover:text-primary transition-colors">簡</button>
+</div>
+<div class="flex items-center gap-4">
+<button class="text-slate-300 hover:text-white text-sm font-bold transition-colors">登入</button>
+<button class="flex min-w-[100px] cursor-pointer items-center justify-center rounded-lg h-10 px-6 bg-primary text-black text-sm font-bold tracking-wide hover:bg-primary-hover transition-all shadow-[0_0_20px_rgba(245,197,24,0.15)]">
+                        註冊加入
+                    </button>
+</div>
+</div>
+</div>
 </header>
-
-<div class="spacer"></div>
-
-<main class="layout">
-
-  <section class="mission-visual">
-    <div class="mission-header">
-      <span class="badge">Mission #402</span>
-      <h1>重現 Cape Sunset 的完美剪影</h1>
-    </div>
-    
-    <div class="main-img-container">
-      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" alt="Mission Objective">
-      <div class="replicate-overlay">
-        <span>重現成功率</span>
-        <b>92%</b>
-      </div>
-    </div>
-
-    <div style="margin-top: 30px; display: flex; align-items: center; gap: 15px;">
-      <img src="https://randomuser.me/api/portraits/men/32.jpg" style="width:40px; height:40px; border-radius:50%; border: 1px solid var(--accent-color);">
-      <div style="font-size: 14px;">
-        <span style="color:var(--text-sub)">攻略提供者：</span>
-        <strong style="color:var(--accent-color)">@travelsnapper</strong>
-      </div>
-    </div>
-  </section>
-
-  <section class="info-column">
-
-    <div class="card">
-      <span class="card-label">01 最佳時空窗口</span>
-      <div class="data-grid">
-        <div class="data-item">
-          <label>推薦月份</label>
-          <span>6月 - 8月</span>
-        </div>
-        <div class="data-item">
-          <label>日落時間</label>
-          <span>18:15</span>
-        </div>
-        <div class="data-item">
-          <label>光影持續</label>
-          <span>20 分鐘</span>
-        </div>
-        <div class="data-item">
-          <label>潮汐狀態</label>
-          <span>高漲潮</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="card-label">02 精確站位攻略</span>
-      <div class="positioning-map">
-        <div style="font-size: 11px; color: #333; position: absolute; top: 10px;">TOP VIEW / 俯視圖</div>
-        <div class="position-point"></div>
-        <div style="position: absolute; bottom: 10px; font-size: 10px; color: var(--text-sub);">[ 座標：33.8568° S, 151.2153° E ]</div>
-      </div>
-      <div class="instruction-box">
-        <b>關鍵站位：</b>請站在步道盡頭左側第二個長凳後方，確保相機高度與欄杆持平。
-      </div>
-      <a class="btn-primary" href="#">啟動導航前往此站位</a>
-    </div>
-
-    <div class="card">
-      <span class="card-label">03 構圖與器材清單</span>
-      <div class="data-grid" style="grid-template-columns: 1fr;">
-        <div class="data-item">
-          <label>構圖重點</label>
-          <span style="color: var(--accent-color);">對齊燈塔與太陽中心線</span>
-        </div>
-      </div>
-      <div class="data-grid" style="margin-top: 15px;">
-        <div class="data-item">
-          <label>建議焦段</label>
-          <span>105mm (Full Frame)</span>
-        </div>
-        <div class="data-item">
-          <label>相機高度</label>
-          <span>低角度 (離地 30cm)</span>
-        </div>
-      </div>
-    </div>
-
-    <div class="card">
-      <span class="card-label">04 現場風險提示</span>
-      <div class="warning-box">
-        ⚠️ 注意：若雲層過厚，太陽將無法形成清晰剪影。建議提早 15 分鐘觀察雲跡線。
-      </div>
-    </div>
-
-  </section>
-
+<main class="max-w-[1440px] mx-auto px-4 lg:px-10 py-6">
+<nav class="flex flex-wrap gap-2 mb-6 items-center">
+<a class="text-slate-500 hover:text-primary text-xs font-semibold uppercase tracking-wider transition-colors" href="#">首頁</a>
+<span class="material-symbols-outlined text-xs text-slate-700">chevron_right</span>
+<a class="text-slate-500 hover:text-primary text-xs font-semibold uppercase tracking-wider transition-colors" href="#">瑞士</a>
+<span class="material-symbols-outlined text-xs text-slate-700">chevron_right</span>
+<span class="text-white text-xs font-bold uppercase tracking-wider">勞特布倫嫩谷</span>
+</nav>
+<div class="flex flex-col lg:flex-row gap-10">
+<div class="flex-1 min-w-0">
+<div class="relative group rounded-xl overflow-hidden bg-black shadow-2xl ring-1 ring-white/5">
+<img alt="Epic sunset view of Lauterbrunnen valley in Switzerland" class="w-full h-auto object-cover max-h-[85vh] block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBPoJLKywNOijG5ro5KRZBYXMWIMCKIV5t6_aKFIJH90fgAf-YdBtVWy7XN5J2zInBepHtC2E_ape5cWtUPfvFIvFr89ajWzL5TDvEvkL4hBTHat5eQqzdHNhv9ZgJoRxOLQI5HBuTa0x7mS8-vRhABH4o3A2jTNzCQnOO3y2WK_6imYuJpFTQ0xCfU8IZzYWAF4aWEtACMGf7PEQ1uOa3BdfPYmGfvcyAIXcbER9l1SfxGfxAieg63Fw4Shv-BIJUME2sP0LKlwHA"/>
+<div class="absolute inset-x-0 bottom-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent p-6 flex flex-wrap items-end justify-between gap-4">
+<div class="flex items-center gap-4">
+<a class="group/author flex items-center gap-3" href="#">
+<div class="size-14 rounded-full bg-cover bg-center border-2 border-white/20 group-hover/author:border-primary transition-all shadow-lg" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAmB6W9xiqOKyAUmRZS0q_KTory4Y_V4hmMbZXTSfE8SYBJZlyuOptifmmert3bNbi5S7o0gL0yT20UUtJQhHPUOSK6AK2INJengLyG0ef7eS2vvsmriEsnpQQygtwjWDLaTwAuGcGZxXJsxWOpTJoD-9_2-XOrcZMYVQ6F9SDe_XRfRTpzjc-1mBrtPasb0WPs5EZsBGvhyiMOV-FQBQlY_wf4fx6uDVCjgazOMiwWl6vpEwzF3qKAwmJ3RaCSdO5ld-z-p4sz_j0");'></div>
+<div>
+<p class="text-slate-300 text-[10px] font-black uppercase tracking-[0.2em] mb-0.5">攝影師</p>
+<h3 class="text-white text-lg font-bold group-hover/author:text-primary transition-colors">Marco Valenzia</h3>
+</div>
+</a>
+</div>
+<div class="flex items-center gap-3">
+<button class="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 px-6 py-3 rounded-xl transition-all group/btn shadow-xl">
+<span class="material-symbols-outlined text-white group-hover/btn:text-rose-500 transition-colors">favorite</span>
+<span class="text-white text-sm font-bold">1,248</span>
+</button>
+<button class="flex items-center gap-2 bg-white/10 hover:bg-white/20 backdrop-blur-md border border-white/20 px-6 py-3 rounded-xl transition-all group/btn shadow-xl">
+<span class="material-symbols-outlined text-white group-hover/btn:text-primary transition-colors">bookmark</span>
+<span class="text-white text-sm font-bold">儲存</span>
+</button>
+</div>
+</div>
+</div>
+<div class="mt-8">
+<h1 class="text-3xl lg:text-5xl font-extrabold leading-tight tracking-tight text-white mb-4">
+                        勞特布倫嫩的高山餘暉
+                    </h1>
+<p class="text-slate-400 text-lg font-medium leading-relaxed max-w-3xl">
+                        在秋季的高峰期捕捉到，這張照片展示了著名的施陶巴赫瀑布，被落日照進山谷地板的最後一道金光點亮。
+                    </p>
+</div>
+<div class="mt-12 p-8 bg-card-dark rounded-xl border border-border-dark relative overflow-hidden group">
+<div class="absolute top-0 right-0 w-32 h-32 bg-primary/5 rounded-full -mr-16 -mt-16 blur-3xl"></div>
+<div class="flex flex-col md:flex-row items-center justify-between gap-6 relative z-10 text-center md:text-left">
+<div>
+<p class="text-primary text-[10px] font-black uppercase tracking-[0.2em] mb-2">商店精選</p>
+<h3 class="text-white text-2xl font-bold mb-2">風景攝影的高級鏡頭</h3>
+<p class="text-slate-500 text-sm font-medium">查看我們針對此地點的最佳推薦，包括超廣角和 ND 濾鏡套裝。</p>
+</div>
+<button class="whitespace-nowrap bg-primary text-black px-8 py-3.5 rounded-lg font-extrabold text-sm uppercase tracking-wider hover:bg-primary-hover transition-all shadow-lg shadow-primary/20">
+                            探索商店
+                        </button>
+</div>
+</div>
+</div>
+<aside class="w-full lg:w-[420px] flex flex-col gap-6 lg:sticky lg:top-24 max-h-[calc(100vh-120px)] overflow-y-auto custom-scrollbar pr-1">
+<section class="bg-card-dark rounded-xl border border-border-dark overflow-hidden shadow-xl">
+<div class="p-5 border-b border-border-dark flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-2xl">location_on</span>
+<span class="text-base font-extrabold text-white">拍攝位置</span>
+</div>
+<button class="text-xs text-primary font-bold hover:text-white transition-colors bg-primary/10 px-3 py-1.5 rounded-md">複製座標</button>
+</div>
+<div class="aspect-[4/5] relative w-full overflow-hidden">
+<img alt="Map preview" class="w-full h-full object-cover grayscale brightness-50 contrast-125 opacity-40 scale-125" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD3un1N-DeClJMlP0nd-tkq0vYQkxTBUwgwB-fptHlEfVb5ebtGkEgfstVONbqS8brtW8X7RczUqMLuWwdejMN_tOL8_wukQM8LwcEsSJ4BnN7kKR2wQI2O0HHbsIGZ4HXA9HlcxrTTQLNqJZLKmUj6b8J1qgvj09ehI0fSGsq9gE8cgsnH6xlXKqGywktMXIlk-JHGdzbNQDgFijkyZBQNckm3RQY8Ag62vssPjKarwMnHPIf5dYWIBqZGviFDNJNpISvMwOiojEo"/>
+<div class="absolute inset-0 flex items-center justify-center">
+<div class="size-20 bg-primary/20 rounded-full flex items-center justify-center">
+<div class="size-8 bg-primary rounded-full shadow-[0_0_40px_rgba(245,197,24,1)] animate-pulse"></div>
+</div>
+</div>
+<div class="absolute bottom-6 left-6 right-6 bg-black/90 backdrop-blur-md p-5 rounded-lg border border-border-dark flex items-center justify-between shadow-2xl">
+<div>
+<p class="text-[10px] font-black text-slate-500 uppercase tracking-widest mb-1">目前座標</p>
+<p class="text-lg font-mono text-white font-bold">46.5935° N, 7.9091° E</p>
+</div>
+</div>
+</div>
+<div class="p-6">
+<button class="w-full flex items-center justify-center gap-2 bg-primary text-black py-4 rounded-lg text-sm font-extrabold hover:bg-primary-hover transition-all shadow-lg shadow-primary/10">
+<span class="material-symbols-outlined text-xl">directions</span> 在 Google 地圖中開啟
+                        </button>
+</div>
+</section>
+<section class="bg-card-dark rounded-xl border border-border-dark p-6 shadow-lg">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">schedule</span>
+<span class="text-sm font-extrabold text-white uppercase tracking-wider">照片拍攝時間</span>
+</div>
+<div class="bg-background-dark/50 border border-border-dark p-5 rounded-lg">
+<p class="text-[10px] font-black text-slate-600 uppercase mb-2 tracking-widest">拍攝日期與時間</p>
+<p class="text-lg font-bold text-white">2023年10月15日 · 17:45</p>
+<p class="text-xs text-primary font-bold mt-1 uppercase tracking-wider">黃金時刻 · 日落前</p>
+</div>
+</section>
+<section class="bg-card-dark rounded-xl border border-border-dark p-6 shadow-lg">
+<div class="flex items-center gap-2 mb-6">
+<span class="material-symbols-outlined text-primary">camera</span>
+<span class="text-sm font-extrabold text-white uppercase tracking-wider">專業器材參數</span>
+</div>
+<div class="space-y-4">
+<div class="flex justify-between items-center py-2 border-b border-border-dark/50">
+<span class="text-slate-500 text-xs font-bold">相機型號</span>
+<span class="text-white text-sm font-bold">Sony A7R IV</span>
+</div>
+<div class="flex justify-between items-center py-2 border-b border-border-dark/50">
+<span class="text-slate-500 text-xs font-bold">鏡頭型號</span>
+<span class="text-white text-sm font-bold">FE 16-35mm F2.8 GM</span>
+</div>
+<div class="grid grid-cols-2 gap-4 mt-4">
+<div class="bg-background-dark/40 p-3 rounded-lg border border-border-dark">
+<p class="text-[10px] text-slate-600 font-black uppercase mb-1">焦段</p>
+<p class="text-sm text-white font-bold">24mm</p>
+</div>
+<div class="bg-background-dark/40 p-3 rounded-lg border border-border-dark">
+<p class="text-[10px] text-slate-600 font-black uppercase mb-1">光圈</p>
+<p class="text-sm text-white font-bold">f/11</p>
+</div>
+<div class="bg-background-dark/40 p-3 rounded-lg border border-border-dark">
+<p class="text-[10px] text-slate-600 font-black uppercase mb-1">快門速度</p>
+<p class="text-sm text-white font-bold">1/15s</p>
+</div>
+<div class="bg-background-dark/40 p-3 rounded-lg border border-border-dark">
+<p class="text-[10px] text-slate-600 font-black uppercase mb-1">ISO</p>
+<p class="text-sm text-white font-bold">100</p>
+</div>
+</div>
+</div>
+</section>
+<section class="bg-card-dark rounded-xl border border-border-dark p-6 shadow-lg">
+<div class="flex items-center gap-2 mb-5">
+<span class="material-symbols-outlined text-primary">lightbulb</span>
+<span class="text-sm font-extrabold text-white uppercase tracking-wider">攝影師 Tips</span>
+</div>
+<div class="bg-background-dark/40 border border-border-dark p-5 rounded-lg">
+<p class="text-sm text-slate-300 font-medium leading-relaxed">
+                            建議將車輛停在村莊盡頭的 "Schützenbach" 停車場，隨後向南步行約 10 分鐘前往瀑布小徑。拍攝時務必使用超廣角鏡頭（如 16-35mm），並尋找地上的小徑作為前景導引線。落日前 15-20 分鐘是捕捉瀑布反光的最佳時機，此時光線會呈現柔和的金黃色，與深色的岩壁形成強烈對比。建議使用腳架以應對較慢的快門速度。
+                        </p>
+</div>
+</section>
+</aside>
+</div>
+<section class="mt-20">
+<div class="flex items-center justify-between mb-8 border-b border-border-dark pb-4">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-primary text-3xl">explore</span>
+<h2 class="text-2xl font-extrabold text-white">附近靈感 <span class="text-slate-500 text-sm font-medium ml-2 uppercase tracking-widest">(1km 內)</span></h2>
+</div>
+<a class="text-primary text-sm font-bold hover:underline" href="#">查看更多</a>
+</div>
+<div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
+<div class="aspect-square relative group overflow-hidden rounded-xl bg-card-dark border border-border-dark">
+<img alt="Nearby Photo 1" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB-ZKBA01zKPFGIieXmtoOkayGGaR0iJw8iqKbs5qH4TU5pJzI49Bn5xPmqy7fzuU62gdW0xS2cw-Pum0Cwfp-4BXcbXWGXnX7w6BPrB-FA-g_zYFiXJW0G0Q0LyusWumnwODT7KJszaP6OhmhUhPl1TolkuFN9OihhB2tqRs3tUHceNxvxscHIo0Gc4e7EvfaBMEjkALsCg7r81Ctbz7Eru9U6-lEiWOWpv-GbvHteSwhmIA84JPbdXVF93iCMeSKkJtnQA1gUrxo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<p class="text-[11px] text-white font-bold">250m • Staubbach Falls</p>
+</div>
+</div>
+<div class="aspect-square relative group overflow-hidden rounded-xl bg-card-dark border border-border-dark">
+<img alt="Nearby Photo 2" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHEmJnz3xZviZI2WQoGI-WShsmD6HUKxeXD3qyGrfcX0T2YfaVhwh-rwfVTOltqfOm2Rnz46amQrgB_7GJYa1buFuXpNZBAlQEfN9GXi21YEEuaMtlUQtp_MJKgmzM_6shqf-IZbtF3M_in666fg-Gm8bsLqIMkr7pJJb0R4VRJYkFXJMAjs1fAujpKxgK8Fn9Lo8f_K3JScrNkRt81T2VcbFnl5I7yEApfq00ssi6HXVkbCZYGJrnr6N4OyiLaZN7Ko1Y5Shrz24"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<p class="text-[11px] text-white font-bold">400m • Valley Church</p>
+</div>
+</div>
+<div class="aspect-square relative group overflow-hidden rounded-xl bg-card-dark border border-border-dark">
+<img alt="Nearby Photo 3" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuA_AhOpwCh142Pm_F_V4hO5kDd5I5oFDeZdd2aNxMICHqLryHRnz8ZupWmNCV8OV1jd4DlAdpL7unoeArOw4NnisFfMcG-GtnAeIyDyOGiUnQlW74pAc-FpIz-lMMAnXNoTypc1s4WxusWzc61uo7iX0_V9FNQNAUgvUQqRFQwt2FLkVQUJpVHVNRNmAxxnzOwnJJqrZVW7j1tDkwPLtxEVFx2isOjclj0_A0Z3QRXAXHpgc7VaejqyrPgYfCZpn519sTi4t9PbUSE"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<p class="text-[11px] text-white font-bold">650m • Mountain Cabin</p>
+</div>
+</div>
+<div class="aspect-square relative group overflow-hidden rounded-xl bg-card-dark border border-border-dark">
+<img alt="Nearby Photo 4" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDGGGIz6skS114QZ0hBSBXZD_jVcVYtPL4Sjd2a4pm7HkjhmVOi6cvWRs2MkL2ZqqnbNlv9_UjYS2Ts-noUJ9YLUtjAEkcvvRmsoYmvSGWrgDrubBk5ck4RsB9BOSa59Ao4pru2rm8HY6HkA3KFA-ww17dWUCesOTx-uOgiUDDhohhSQvH8MMg0O0StKG80PZig1-P2Mg5tODunVirWcQl_0SkqKqw3AhnPp2xzmnnn5fHep30r_ylCyYaSPue9LUXbiaguk7FEYSI"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<p class="text-[11px] text-white font-bold">800m • Alpine Path</p>
+</div>
+</div>
+<div class="aspect-square relative group overflow-hidden rounded-xl bg-card-dark border border-border-dark">
+<img alt="Nearby Photo 5" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBuuApKvnNVzREQtCI6qM7mgiZSve9rjZATwS8KHpr4tDAYnIH0fKItuP7HA-FJPhvofFEATaUX10Gk4GGp2nSe9k165urQrInGf1XnUceBXWXiLagxRhKDXg0mk95KRyRGCgWfJZDmXrkxBSdK1ziqPi15t9jQFUF0AxrmIpZOROW4w6k8EXvbrW2-hqZp-pd3u4NoByXkNLOwFptms1yr51ayTgIsOAsNhv2c5g1oL_aRE5oV50f5mQ_Uc2g_gLkTaSYGf4DVBlc"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent opacity-0 group-hover:opacity-100 transition-opacity flex items-end p-4">
+<p class="text-[11px] text-white font-bold">950m • Valley Viewpoint</p>
+</div>
+</div>
+</div>
+</section>
 </main>
-
-<footer>
-  © 2026 StandHere 打打卡 · 任務編號 #402 · 數據由攝影社群共同維護
+<footer class="mt-20 border-t border-border-dark py-12 bg-card-dark/40">
+<div class="max-w-[1440px] mx-auto px-10 flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3 text-slate-500">
+<span class="material-symbols-outlined text-xl text-primary/40">camera</span>
+<span class="text-sm font-semibold tracking-tight uppercase">© 2024 PHOTOSPOTTER. 探索。拍攝。分享。</span>
+</div>
+<div class="flex gap-10">
+<a class="text-xs font-bold text-slate-600 uppercase tracking-widest hover:text-primary transition-colors" href="#">隱私政策</a>
+<a class="text-xs font-bold text-slate-600 uppercase tracking-widest hover:text-primary transition-colors" href="#">條款</a>
+<a class="text-xs font-bold text-slate-600 uppercase tracking-widest hover:text-primary transition-colors" href="#">聯絡我們</a>
+</div>
+</div>
 </footer>
 
-</body>
-</html>
+</body></html>
