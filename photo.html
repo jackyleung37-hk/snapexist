@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<title>任務攻略｜StandHere 打打卡</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+  :root {
+    --accent-color: #f5c518; 
+    --bg-body: #0a0a0a;
+    --bg-light: #161616;
+    --card-bg: #1e1e1e;
+    --border-color: rgba(255, 255, 255, 0.08);
+    --text-main: #eeeeee;
+    --text-sub: #888888;
+    --warn: #ff4d00;
+    --radius: 12px;
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    background: var(--bg-body);
+    color: var(--text-main);
+    font-family: 'Inter', -apple-system, sans-serif;
+    line-height: 1.6;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.03'/%3E%3C/svg%3E");
+  }
+
+  header {
+    position: fixed; top: 0; width: 100%; z-index: 1000;
+    background: rgba(10, 10, 10, 0.8); backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border-color);
+    padding: 14px 32px; display: flex; justify-content: space-between; align-items: center;
+  }
+
+  .logo { font-weight: 900; font-size: 20px; color: var(--accent-color); text-decoration: none; }
+
+  .spacer { height: 70px; }
+
+  /* ====== Layout ====== */
+  .layout {
+    display: grid; grid-template-columns: 1fr 400px; gap: 40px;
+    max-width: 1300px; margin: 30px auto; padding: 0 24px;
+  }
+
+  /* 左邊：任務視覺視覺區 */
+  .mission-visual { position: sticky; top: 90px; }
+  .mission-header { margin-bottom: 24px; }
+  .mission-header h1 { font-size: 32px; font-weight: 800; margin: 0; }
+  .mission-header .badge {
+    display: inline-block; background: var(--accent-color); color: #000;
+    padding: 4px 12px; border-radius: 4px; font-size: 12px; font-weight: 800;
+    margin-bottom: 8px; text-transform: uppercase;
+  }
+
+  .main-img-container {
+    position: relative; border-radius: var(--radius); overflow: hidden;
+    border: 1px solid var(--border-color); box-shadow: 0 30px 60px rgba(0,0,0,0.6);
+  }
+  .main-img-container img { width: 100%; display: block; filter: brightness(0.9); }
+  
+  /* 圖片上的「重現標記」 */
+  .replicate-overlay {
+    position: absolute; bottom: 20px; right: 20px;
+    background: rgba(0,0,0,0.6); backdrop-filter: blur(10px);
+    padding: 15px; border-radius: 8px; border: 1px solid var(--accent-color);
+    text-align: center;
+  }
+  .replicate-overlay span { display: block; font-size: 10px; color: var(--accent-color); font-weight: 700; }
+  .replicate-overlay b { font-size: 20px; color: #fff; }
+
+  /* 右邊：攻略面板 */
+  .info-column { display: flex; flex-direction: column; gap: 20px; }
+
+  .card {
+    background: var(--card-bg); border: 1px solid var(--border-color);
+    border-radius: var(--radius); padding: 24px;
+  }
+
+  .card-label { 
+    font-size: 11px; font-weight: 700; color: var(--accent-color); 
+    text-transform: uppercase; letter-spacing: 2px; margin-bottom: 15px; display: block;
+  }
+
+  /* 數據面板樣式 */
+  .data-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; }
+  .data-item { background: rgba(255,255,255,0.03); padding: 12px; border-radius: 8px; border: 1px solid var(--border-color); }
+  .data-item label { display: block; font-size: 11px; color: var(--text-sub); }
+  .data-item span { font-size: 14px; font-weight: 600; color: #fff; }
+
+  /* 站位圖佔位 */
+  .positioning-map {
+    height: 180px; background: #111; border-radius: 8px; margin: 15px 0;
+    display: flex; align-items: center; justify-content: center;
+    border: 1px solid var(--border-color); position: relative;
+    overflow: hidden;
+  }
+  .position-point {
+    width: 20px; height: 20px; background: var(--accent-color); border-radius: 50%;
+    box-shadow: 0 0 15px var(--accent-color); animation: pulse 2s infinite;
+  }
+  @keyframes pulse { 0% {transform: scale(1); opacity: 1;} 100% {transform: scale(2.5); opacity: 0;} }
+
+  .instruction-box {
+    background: rgba(245, 197, 24, 0.05); border-left: 3px solid var(--accent-color);
+    padding: 15px; font-size: 14px; color: #ddd; margin: 15px 0;
+  }
+
+  .warning-box {
+    background: rgba(255, 77, 0, 0.1); border: 1px solid var(--warn);
+    padding: 12px; border-radius: 8px; color: #ff9d73; font-size: 13px;
+  }
+
+  .btn-primary {
+    display: block; width: 100%; padding: 16px; background: var(--accent-color);
+    color: #000; text-align: center; text-decoration: none; border-radius: 99px;
+    font-weight: 800; font-size: 16px; transition: 0.3s;
+    margin-top: 10px; box-shadow: 0 10px 20px rgba(245, 197, 24, 0.2);
+  }
+  .btn-primary:hover { transform: translateY(-3px); box-shadow: 0 15px 30px rgba(245, 197, 24, 0.4); }
+
+  footer { text-align: center; padding: 60px; color: #444; font-size: 12px; border-top: 1px solid var(--border-color); }
+
+  @media (max-width: 900px) {
+    .layout { grid-template-columns: 1fr; }
+    .mission-visual { position: static; }
+  }
+</style>
+</head>
+
+<body>
+
+<header>
+  <a href="#" class="logo">StandHere</a>
+  <nav>
+    <a href="#">任務地圖</a>
+    <a href="#">攻略列表</a>
+  </nav>
+</header>
+
+<div class="spacer"></div>
+
+<main class="layout">
+
+  <section class="mission-visual">
+    <div class="mission-header">
+      <span class="badge">Mission #402</span>
+      <h1>重現 Cape Sunset 的完美剪影</h1>
+    </div>
+    
+    <div class="main-img-container">
+      <img src="https://images.unsplash.com/photo-1500530855697-b586d89ba3ee" alt="Mission Objective">
+      <div class="replicate-overlay">
+        <span>重現成功率</span>
+        <b>92%</b>
+      </div>
+    </div>
+
+    <div style="margin-top: 30px; display: flex; align-items: center; gap: 15px;">
+      <img src="https://randomuser.me/api/portraits/men/32.jpg" style="width:40px; height:40px; border-radius:50%; border: 1px solid var(--accent-color);">
+      <div style="font-size: 14px;">
+        <span style="color:var(--text-sub)">攻略提供者：</span>
+        <strong style="color:var(--accent-color)">@travelsnapper</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="info-column">
+
+    <div class="card">
+      <span class="card-label">01 最佳時空窗口</span>
+      <div class="data-grid">
+        <div class="data-item">
+          <label>推薦月份</label>
+          <span>6月 - 8月</span>
+        </div>
+        <div class="data-item">
+          <label>日落時間</label>
+          <span>18:15</span>
+        </div>
+        <div class="data-item">
+          <label>光影持續</label>
+          <span>20 分鐘</span>
+        </div>
+        <div class="data-item">
+          <label>潮汐狀態</label>
+          <span>高漲潮</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">02 精確站位攻略</span>
+      <div class="positioning-map">
+        <div style="font-size: 11px; color: #333; position: absolute; top: 10px;">TOP VIEW / 俯視圖</div>
+        <div class="position-point"></div>
+        <div style="position: absolute; bottom: 10px; font-size: 10px; color: var(--text-sub);">[ 座標：33.8568° S, 151.2153° E ]</div>
+      </div>
+      <div class="instruction-box">
+        <b>關鍵站位：</b>請站在步道盡頭左側第二個長凳後方，確保相機高度與欄杆持平。
+      </div>
+      <a class="btn-primary" href="#">啟動導航前往此站位</a>
+    </div>
+
+    <div class="card">
+      <span class="card-label">03 構圖與器材清單</span>
+      <div class="data-grid" style="grid-template-columns: 1fr;">
+        <div class="data-item">
+          <label>構圖重點</label>
+          <span style="color: var(--accent-color);">對齊燈塔與太陽中心線</span>
+        </div>
+      </div>
+      <div class="data-grid" style="margin-top: 15px;">
+        <div class="data-item">
+          <label>建議焦段</label>
+          <span>105mm (Full Frame)</span>
+        </div>
+        <div class="data-item">
+          <label>相機高度</label>
+          <span>低角度 (離地 30cm)</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <span class="card-label">04 現場風險提示</span>
+      <div class="warning-box">
+        ⚠️ 注意：若雲層過厚，太陽將無法形成清晰剪影。建議提早 15 分鐘觀察雲跡線。
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<footer>
+  © 2026 StandHere 打打卡 · 任務編號 #402 · 數據由攝影社群共同維護
+</footer>
+
+</body>
+</html>
