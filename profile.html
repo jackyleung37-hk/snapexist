@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html class="dark" lang="zh-HK"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    colors: {
+                        "primary": "#f5c518",
+                        "background-light": "#f8f8f5",
+                        "background-dark": "#121212",
+                        "surface": "#1e1e1e",
+                        "border-color": "#2a2a2a"
+                    },
+                    fontFamily: {
+                        "display": ["Plus Jakarta Sans"]
+                    },
+                    borderRadius: { "DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px" },
+                },
+            },
+        }
+    </script>
+<style type="text/tailwindcss">
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .fill-icon {
+            font-variation-settings: 'FILL' 1;
+        }
+        .masonry-grid {
+            columns: 1;
+            column-gap: 1.5rem;
+            width: 100%;
+        }
+        @media (min-width: 640px) { .masonry-grid { columns: 2; } }
+        @media (min-width: 1024px) { .masonry-grid { columns: 3; } }
+        @media (min-width: 1280px) { .masonry-grid { columns: 4; } }
+        .masonry-item {
+            break-inside: avoid;
+            margin-bottom: 1.5rem;
+            width: 100%;
+        }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .profile-cover {
+            height: 400px;
+            background-position: center;
+            background-size: cover;
+            position: relative;
+        }
+        .profile-cover::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to bottom, transparent 40%, #121212 100%);
+        }
+    </style>
+</head>
+<body class="bg-background-dark font-display text-white min-h-screen flex flex-col">
+<header class="sticky top-0 flex items-center justify-between whitespace-nowrap border-b border-border-color px-6 py-3 bg-background-dark/95 backdrop-blur-md z-50">
+<div class="flex items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<div class="size-8 flex items-center justify-center">
+<span class="material-symbols-outlined text-3xl fill-icon">photo_camera</span>
+</div>
+<h2 class="text-white text-xl font-bold leading-tight tracking-[-0.015em]">PhotoSpotter</h2>
+</div>
+<label class="flex flex-col min-w-64 h-10">
+<div class="flex w-full flex-1 items-stretch rounded-lg h-full">
+<div class="text-[#888] flex border-none bg-surface items-center justify-center pl-4 rounded-l-lg">
+<span class="material-symbols-outlined text-[20px]">search</span>
+</div>
+<input class="form-input flex w-full min-w-0 flex-1 resize-none overflow-hidden rounded-lg text-white focus:outline-0 focus:ring-0 border-none bg-surface focus:border-none h-full placeholder:text-[#888] px-4 rounded-l-none pl-2 text-sm font-normal" placeholder="搜尋拍攝地點、攝影師..."/>
+</div>
+</label>
+</div>
+<div class="flex flex-1 justify-end gap-8 items-center">
+<nav class="flex items-center gap-8">
+<a class="text-[#888] hover:text-white text-sm font-medium leading-normal transition-colors" href="#">探索</a>
+<a class="text-[#888] hover:text-white text-sm font-medium leading-normal transition-colors" href="#">地圖</a>
+<a class="text-primary text-sm font-bold border-b-2 border-primary pb-1 leading-normal" href="#">貢獻者</a>
+</nav>
+<div class="h-6 w-px bg-border-color"></div>
+<button class="flex min-w-[64px] cursor-pointer items-center justify-center overflow-hidden rounded-lg h-9 px-4 bg-primary text-background-dark text-xs font-bold uppercase tracking-wider transition-opacity hover:opacity-90">
+                繁/簡
+            </button>
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-border-color" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqMly0Jkoj3ziVstc-xVseNyYs_pqVMc9tvrGJcbnkVT_TTjl0UIXoj1hwGHQD5CM_evhfyW1H6rKmCm_SHNxRXVgb2xnwT5YxKpPY0KaSXQUG_VE3iSGFfGwpV2_w-muO99WN6MyWDbo3grpE2BaebfMrtSlCSJ-Z-nwL2Q2ur6MAB4-zrNf72vvlqq0_2VIjAwlaHC_k-Kk8E1cvde7NC2iQvWR-EJyoXBBr30TH4m-J2EGJ9eb-Pcs-44r8WHk8CjtGP6BgK8k");'></div>
+</div>
+</header>
+<main class="flex-1">
+<div class="relative">
+<div class="profile-cover w-full" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuAduC3yGVjs-UBNtCz5tBNWxNR0o1hH9jtIPWIVFr6PLkI8RnVGZXtKcxtO6dTB2ShHbdHd6z4dUKiI0GkxFb_dgGNW3Nhh5BeuRvTj_0_UIOBQtOlSjzvIp39ymbrApN9xFSirtEAoS4eYCA3ScWzNusqrvIIqL7fpPHgpH_OdEEBp_dBv7g4qhDZFaSHp2kzPA4JGz0M--NfXoxm4_xSOkdHtEsiToVu4Nmw196nJLAJLtg8cOIUoaTQpadJ3baI8iNE88qYE0Jw");'></div>
+<div class="absolute inset-x-0 -bottom-24 flex flex-col items-center z-10">
+<div class="relative">
+<div class="size-32 rounded-full border-4 border-background-dark overflow-hidden bg-surface shadow-2xl">
+<img alt="Photographer" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqMly0Jkoj3ziVstc-xVseNyYs_pqVMc9tvrGJcbnkVT_TTjl0UIXoj1hwGHQD5CM_evhfyW1H6rKmCm_SHNxRXVgb2xnwT5YxKpPY0KaSXQUG_VE3iSGFfGwpV2_w-muO99WN6MyWDbo3grpE2BaebfMrtSlCSJ-Z-nwL2Q2ur6MAB4-zrNf72vvlqq0_2VIjAwlaHC_k-Kk8E1cvde7NC2iQvWR-EJyoXBBr30TH4m-J2EGJ9eb-Pcs-44r8WHk8CjtGP6BgK8k"/>
+</div>
+<a class="absolute -right-4 top-0 bg-surface/80 backdrop-blur-md border border-border-color p-2 rounded-full text-primary hover:bg-primary hover:text-background-dark transition-all group" href="#" title="收益管理">
+<span class="material-symbols-outlined text-[18px]">payments</span>
+<span class="absolute left-full ml-2 px-2 py-1 bg-surface border border-border-color rounded text-[10px] whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">收益管理</span>
+</a>
+</div>
+<div class="mt-4 text-center px-4">
+<h1 class="text-3xl font-bold tracking-tight">Alan Chan</h1>
+<p class="text-[#888] mt-2 max-w-md mx-auto text-sm leading-relaxed">
+                        捕捉香港街道的靈魂與光影。熱衷於城市景觀與長曝光攝影。資深城市探索者。
+                    </p>
+<div class="mt-6 flex justify-center">
+<button class="bg-primary text-background-dark font-bold px-8 py-2.5 rounded-full flex items-center gap-2 hover:opacity-90 transition-all shadow-lg shadow-primary/20">
+<span class="material-symbols-outlined text-lg">brand_awareness</span>
+                            Follow on Instagram
+                        </button>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-32 border-y border-border-color/50 py-8 bg-surface/20">
+<div class="max-w-[1200px] mx-auto flex justify-center gap-16 md:gap-32 text-center">
+<div class="flex flex-col gap-1">
+<span class="text-2xl font-bold text-white">45.2k</span>
+<span class="text-xs font-bold text-[#888] uppercase tracking-widest">總讚好數</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-2xl font-bold text-white">1,280</span>
+<span class="text-xs font-bold text-[#888] uppercase tracking-widest">追蹤者</span>
+</div>
+<div class="flex flex-col gap-1">
+<span class="text-2xl font-bold text-white">156</span>
+<span class="text-xs font-bold text-[#888] uppercase tracking-widest">作品數量</span>
+</div>
+</div>
+</div>
+<div class="max-w-[1400px] mx-auto px-6 py-12">
+<div class="flex items-center justify-between mb-8">
+<h2 class="text-xl font-bold flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">collections</span>
+                    全部作品
+                </h2>
+<div class="flex gap-2">
+<button class="px-4 py-1.5 rounded-lg bg-surface text-xs font-medium border border-primary/30 text-primary">最新發佈</button>
+<button class="px-4 py-1.5 rounded-lg bg-surface text-xs font-medium border border-border-color text-[#888] hover:text-white transition-colors">熱門程度</button>
+</div>
+</div>
+<div class="masonry-grid">
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Victoria Peak" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAduC3yGVjs-UBNtCz5tBNWxNR0o1hH9jtIPWIVFr6PLkI8RnVGZXtKcxtO6dTB2ShHbdHd6z4dUKiI0GkxFb_dgGNW3Nhh5BeuRvTj_0_UIOBQtOlSjzvIp39ymbrApN9xFSirtEAoS4eYCA3ScWzNusqrvIIqL7fpPHgpH_OdEEBp_dBv7g4qhDZFaSHp2kzPA4JGz0M--NfXoxm4_xSOkdHtEsiToVu4Nmw196nJLAJLtg8cOIUoaTQpadJ3baI8iNE88qYE0Jw"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">太平山頂 (Victoria Peak)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Choi Hung Estate" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBxbunPZj1MASqV58GEoGV5YiX7N8_im4dO_sqOW3cp4Bufn8cEsj4bCyzY24Hh_Dg4cHXHvbJizzhonfgjBZe3KjVdJ7lG8ojo-eSKgVgEb0HYkvRN6wcI-kFkwxCKWek_67art_tLLEDlaxdnYDuEb4x0AavKbX4wO0odWQrXzoXz4Ih-FR6WiNCuKjextQSM-VpuV5fDKaXO7zGZFCyLVrJ8qIrFSo-ECIcTbwu3ke9S44vFrJwJL06wFin0XDyXXYihGRrXPg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">彩虹邨 (Choi Hung Estate)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Quarry Bay" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRbgfY1S0xGiTSGjWgGFTllVMGUH0y8Eiralud4CpHMoPsYRR8d6Le5_m8BLHgo7BM2wrZrsXKcGOHMDqpElhgKdXlXNyWP4iIAMBj43KLdNR2GzvudnUtyOwWyW7xplGZEVYCGmlTr4jsOJZxh0vo0RGVN50oHsEjQ3AQzgb3YGbXkJq5JuN9560aWMJyF-i2YCIIjy9PtRn50GC7vhRBha6xJGY5ryMNptEJCLm4DqJ-DW1Q0Vn_hk8iaKNd82WjwOh_vF9DfIo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">怪獸大廈 (Quarry Bay)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Victoria Harbour" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCayvh_PLoaayjrobojU9Z6uj2bQtKkrhBcy26dincd68la1wspVJHabQeuDeGlnsQ051eY6ILi75clVmFFkcMQRCTXF9_3e34sMNVRRUOVOJwLw6Ve04hC45M0Jai9q59T8JyIbOcN-W7Pfl4XvG5sYq5GIf8F2lPaKXrmJsymPKfdgdSLENkgIjiAk52umS_XmOjT-hOAkkcxJ7yRCZFGsOPiQDzjC7esBa-XVGdp_ECdPS8WD-o7iI8X2BS2EKNHIW5430QcTec"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">維多利亞港 (Victoria Harbour)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Mong Kok" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkTnB-6LdWY8OTcq1OkYCQZVCXjmJFmgzsLs3XUF9nGUx71iK9DckYJiJQ54x2fdoOnu-GuLIXBYnXVL_-VN6rNrV_Bk_99OpGpiuZ4hzZeBIHzubmf5Gs9PyGxrqLQcwx0R4Gg_i92zIYRA99k4tw5i-AyMZcOLdMjy330n2Fk2VFkwSEEKr4HADNWf2Bd3a61VhRaT22ZxSwWFOF5gxhCBG6Nv_6SnIxxBBc-7k-AuoShg0EKcEjN-vHutsPkSerCMhrX0K-_ZU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">旺角街頭 (Mong Kok)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="The Center" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHeeaOrc39KxckHrRhoCJp1xg-FURhb2sbtEttQY2ID6FiXrrvjGoxh9nghoo_dAoKsQDlBZ7XsR-pUALo41VeWwsCYLtJyrXO4aBnL8vlZXNXGmw3luql3I7DL21RzygM5Kwhh5WXyZx7K4SkKvLTHix8uTqv9QbXiR3m-V8-R5fGvX5rI6GjXrMytkqfqJ0gcU-YLQZX1aSg2fLSxzRvSehnPelyXz8-_dK2K-sY5MFbt9KYpFRxQ4t0GK4v7f7lVJ2gG8Dn1jU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">中環中心 (The Center)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Neon Lights" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBxbunPZj1MASqV58GEoGV5YiX7N8_im4dO_sqOW3cp4Bufn8cEsj4bCyzY24Hh_Dg4cHXHvbJizzhonfgjBZe3KjVdJ7lG8ojo-eSKgVgEb0HYkvRN6wcI-kFkwxCKWek_67art_tLLEDlaxdnYDuEb4x0AavKbX4wO0odWQrXzoXz4Ih-FR6WiNCuKjextQSM-VpuV5fDKaXO7zGZFCyLVrJ8qIrFSo-ECIcTbwu3ke9S44vFrJwJL06wFin0XDyXXYihGRrXPg"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">廟街夜市 (Temple Street)</h3>
+</div>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-surface cursor-pointer">
+<img alt="Urban Eye" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRbgfY1S0xGiTSGjWgGFTllVMGUH0y8Eiralud4CpHMoPsYRR8d6Le5_m8BLHgo7BM2wrZrsXKcGOHMDqpElhgKdXlXNyWP4iIAMBj43KLdNR2GzvudnUtyOwWyW7xplGZEVYCGmlTr4jsOJZxh0vo0RGVN50oHsEjQ3AQzgb3YGbXkJq5JuN9560aWMJyF-i2YCIIjy9PtRn50GC7vhRBha6xJGY5ryMNptEJCLm4DqJ-DW1Q0Vn_hk8iaKNd82WjwOh_vF9DfIo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<div class="flex items-center gap-1.5 text-white mb-1">
+<span class="material-symbols-outlined text-sm">location_on</span>
+<h3 class="font-bold text-sm">屋邨美學 (Estate Aesthetics)</h3>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-16 mb-16 flex justify-center items-center gap-2">
+<button class="flex items-center justify-center size-10 rounded-lg bg-surface border border-border-color text-[#888] hover:text-primary hover:border-primary transition-all">
+<span class="material-symbols-outlined text-[20px]">chevron_left</span>
+</button>
+<button class="size-10 rounded-lg flex items-center justify-center text-sm font-bold bg-primary text-background-dark">1</button>
+<button class="size-10 rounded-lg flex items-center justify-center text-sm font-medium bg-surface border border-border-color text-[#888] hover:text-primary hover:border-primary transition-all">2</button>
+<button class="size-10 rounded-lg flex items-center justify-center text-sm font-medium bg-surface border border-border-color text-[#888] hover:text-primary hover:border-primary transition-all">3</button>
+<span class="text-[#444] px-2">...</span>
+<button class="size-10 rounded-lg flex items-center justify-center text-sm font-medium bg-surface border border-border-color text-[#888] hover:text-primary hover:border-primary transition-all">12</button>
+<button class="flex items-center justify-center gap-1 px-4 h-10 rounded-lg bg-surface border border-border-color text-sm font-bold text-[#888] hover:text-primary hover:border-primary transition-all">
+<span>下一頁</span>
+<span class="material-symbols-outlined text-[20px]">chevron_right</span>
+</button>
+</div>
+</div>
+</main>
+<footer class="border-t border-border-color py-12 bg-background-dark px-6">
+<div class="max-w-[1400px] mx-auto flex flex-col md:flex-row justify-between items-center gap-8">
+<div class="flex items-center gap-3 text-primary">
+<span class="material-symbols-outlined text-2xl fill-icon">photo_camera</span>
+<h2 class="text-white text-lg font-bold">PhotoSpotter</h2>
+</div>
+<div class="flex gap-8 text-xs font-medium text-[#888]">
+<a class="hover:text-white transition-colors" href="#">使用條款</a>
+<a class="hover:text-white transition-colors" href="#">隱私政策</a>
+<a class="hover:text-white transition-colors" href="#">版權說明</a>
+<a class="hover:text-white transition-colors" href="#">聯繫我們</a>
+</div>
+<div class="text-[#444] text-[10px] uppercase tracking-widest">
+                © 2024 PHOTOSPOTTER. ALL RIGHTS RESERVED.
+            </div>
+</div>
+</footer>
+
+</body></html>
