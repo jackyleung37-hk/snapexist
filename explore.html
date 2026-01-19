@@ -33,6 +33,7 @@
         .masonry-grid {
             columns: 1;
             column-gap: 1.5rem;
+            width: 100%;
         }
         @media (min-width: 640px) { .masonry-grid { columns: 2; } }
         @media (min-width: 1024px) { .masonry-grid { columns: 3; } }
@@ -41,6 +42,7 @@
         .masonry-item {
             break-inside: avoid;
             margin-bottom: 1.5rem;
+            width: 100%;
         }
         .no-scrollbar::-webkit-scrollbar { display: none; }
         .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
@@ -77,17 +79,17 @@
 <div class="bg-center bg-no-repeat aspect-square bg-cover rounded-full size-9 border border-[#2a2a2a]" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBqMly0Jkoj3ziVstc-xVseNyYs_pqVMc9tvrGJcbnkVT_TTjl0UIXoj1hwGHQD5CM_evhfyW1H6rKmCm_SHNxRXVgb2xnwT5YxKpPY0KaSXQUG_VE3iSGFfGwpV2_w-muO99WN6MyWDbo3grpE2BaebfMrtSlCSJ-Z-nwL2Q2ur6MAB4-zrNf72vvlqq0_2VIjAwlaHC_k-Kk8E1cvde7NC2iQvWR-EJyoXBBr30TH4m-J2EGJ9eb-Pcs-44r8WHk8CjtGP6BgK8k");'></div>
 </div>
 </header>
-<div class="sticky top-[61px] z-40 bg-background-dark/95 backdrop-blur-md border-b border-[#2a2a2a] px-6 py-4">
-<div class="max-w-[1800px] mx-auto flex flex-wrap items-center gap-6">
+<div class="sticky top-[61px] z-40 bg-background-dark/95 backdrop-blur-md border-b border-[#2a2a2a] px-6 py-4 flex justify-center">
+<div class="max-w-[1400px] w-full flex flex-wrap items-center justify-center gap-6">
 <div class="flex items-center gap-3">
 <span class="text-xs font-bold text-[#888] uppercase tracking-wider">月份</span>
 <div class="flex gap-2 overflow-x-auto no-scrollbar max-w-[300px]">
 <button class="shrink-0 px-3 py-1 rounded-full text-xs font-bold bg-primary text-background-dark">全部</button>
-<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white">一月</button>
-<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white">二月</button>
-<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white border border-primary/30">三月</button>
-<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white">四月</button>
-<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white">五月</button>
+<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white transition-colors">一月</button>
+<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white transition-colors">二月</button>
+<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white border border-primary/30 transition-colors">三月</button>
+<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white transition-colors">四月</button>
+<button class="shrink-0 px-3 py-1 rounded-full text-xs font-medium bg-[#1e1e1e] text-[#888] hover:text-white transition-colors">五月</button>
 </div>
 </div>
 <div class="h-8 w-px bg-[#2a2a2a]"></div>
@@ -112,8 +114,8 @@
 </div>
 </div>
 </div>
-<main class="flex-1 px-6 py-6">
-<div class="max-w-[1800px] mx-auto">
+<main class="flex-1 flex flex-col items-center px-6 py-8">
+<div class="max-w-[1400px] w-full">
 <div class="masonry-grid">
 <div class="masonry-item group relative rounded-xl overflow-hidden bg-[#1e1e1e] cursor-pointer">
 <img alt="Victoria Peak" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAduC3yGVjs-UBNtCz5tBNWxNR0o1hH9jtIPWIVFr6PLkI8RnVGZXtKcxtO6dTB2ShHbdHd6z4dUKiI0GkxFb_dgGNW3Nhh5BeuRvTj_0_UIOBQtOlSjzvIp39ymbrApN9xFSirtEAoS4eYCA3ScWzNusqrvIIqL7fpPHgpH_OdEEBp_dBv7g4qhDZFaSHp2kzPA4JGz0M--NfXoxm4_xSOkdHtEsiToVu4Nmw196nJLAJLtg8cOIUoaTQpadJ3baI8iNE88qYE0Jw"/>
@@ -121,9 +123,6 @@
 <div class="absolute top-4 right-4 flex flex-col gap-2">
 <button class="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
 <span class="material-symbols-outlined text-[20px] fill-icon">favorite</span>
-</button>
-<button class="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-[20px]">bookmark</span>
 </button>
 </div>
 <div class="absolute bottom-4 left-4 right-4">
@@ -138,14 +137,6 @@
 <div class="masonry-item group relative rounded-xl overflow-hidden bg-[#1e1e1e] cursor-pointer">
 <img alt="Choi Hung Estate" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCBxbunPZj1MASqV58GEoGV5YiX7N8_im4dO_sqOW3cp4Bufn8cEsj4bCyzY24Hh_Dg4cHXHvbJizzhonfgjBZe3KjVdJ7lG8ojo-eSKgVgEb0HYkvRN6wcI-kFkwxCKWek_67art_tLLEDlaxdnYDuEb4x0AavKbX4wO0odWQrXzoXz4Ih-FR6WiNCuKjextQSM-VpuV5fDKaXO7zGZFCyLVrJ8qIrFSo-ECIcTbwu3ke9S44vFrJwJL06wFin0XDyXXYihGRrXPg"/>
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<div class="absolute top-4 right-4 flex flex-col gap-2">
-<button class="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-[20px]">favorite</span>
-</button>
-<button class="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-[20px]">bookmark</span>
-</button>
-</div>
 <div class="absolute bottom-4 left-4 right-4">
 <h3 class="text-white font-bold text-sm">彩虹邨 (Choi Hung Estate)</h3>
 <p class="text-xs text-[#ccc] mt-1">@CityExplorer_HK</p>
@@ -155,14 +146,6 @@
 <div class="masonry-item group relative rounded-xl overflow-hidden bg-[#1e1e1e] cursor-pointer">
 <img alt="Quarry Bay" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRbgfY1S0xGiTSGjWgGFTllVMGUH0y8Eiralud4CpHMoPsYRR8d6Le5_m8BLHgo7BM2wrZrsXKcGOHMDqpElhgKdXlXNyWP4iIAMBj43KLdNR2GzvudnUtyOwWyW7xplGZEVYCGmlTr4jsOJZxh0vo0RGVN50oHsEjQ3AQzgb3YGbXkJq5JuN9560aWMJyF-i2YCIIjy9PtRn50GC7vhRBha6xJGY5ryMNptEJCLm4DqJ-DW1Q0Vn_hk8iaKNd82WjwOh_vF9DfIo"/>
 <div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-<div class="absolute top-4 right-4 flex flex-col gap-2">
-<button class="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-[20px]">favorite</span>
-</button>
-<button class="p-2 bg-white/10 backdrop-blur-md rounded-full text-white hover:text-primary transition-colors">
-<span class="material-symbols-outlined text-[20px]">bookmark</span>
-</button>
-</div>
 <div class="absolute bottom-4 left-4 right-4">
 <h3 class="text-white font-bold text-sm">怪獸大廈 (Quarry Bay)</h3>
 <p class="text-xs text-[#ccc] mt-1">@UrbanEye</p>
@@ -250,8 +233,35 @@
 </div>
 </div>
 </div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-[#1e1e1e] cursor-pointer">
+<img alt="Photography" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqMly0Jkoj3ziVstc-xVseNyYs_pqVMc9tvrGJcbnkVT_TTjl0UIXoj1hwGHQD5CM_evhfyW1H6rKmCm_SHNxRXVgb2xnwT5YxKpPY0KaSXQUG_VE3iSGFfGwpV2_w-muO99WN6MyWDbo3grpE2BaebfMrtSlCSJ-Z-nwL2Q2ur6MAB4-zrNf72vvlqq0_2VIjAwlaHC_k-Kk8E1cvde7NC2iQvWR-EJyoXBBr30TH4m-J2EGJ9eb-Pcs-44r8WHk8CjtGP6BgK8k"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-white font-bold text-sm">街頭紀實</h3>
+<p class="text-xs text-[#ccc] mt-1">@StreetLife</p>
 </div>
-<div class="mt-12 mb-16 flex justify-center items-center gap-2">
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-[#1e1e1e] cursor-pointer">
+<img alt="Coastal" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDkTnB-6LdWY8OTcq1OkYCQZVCXjmJFmgzsLs3XUF9nGUx71iK9DckYJiJQ54x2fdoOnu-GuLIXBYnXVL_-VN6rNrV_Bk_99OpGpiuZ4hzZeBIHzubmf5Gs9PyGxrqLQcwx0R4Gg_i92zIYRA99k4tw5i-AyMZcOLdMjy330n2Fk2VFkwSEEKr4HADNWf2Bd3a61VhRaT22ZxSwWFOF5gxhCBG6Nv_6SnIxxBBc-7k-AuoShg0EKcEjN-vHutsPkSerCMhrX0K-_ZU"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-white font-bold text-sm">海岸線</h3>
+<p class="text-xs text-[#ccc] mt-1">@OceanBlue</p>
+</div>
+</div>
+</div>
+<div class="masonry-item group relative rounded-xl overflow-hidden bg-[#1e1e1e] cursor-pointer">
+<img alt="Architecture" class="w-full h-auto block" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBRbgfY1S0xGiTSGjWgGFTllVMGUH0y8Eiralud4CpHMoPsYRR8d6Le5_m8BLHgo7BM2wrZrsXKcGOHMDqpElhgKdXlXNyWP4iIAMBj43KLdNR2GzvudnUtyOwWyW7xplGZEVYCGmlTr4jsOJZxh0vo0RGVN50oHsEjQ3AQzgb3YGbXkJq5JuN9560aWMJyF-i2YCIIjy9PtRn50GC7vhRBha6xJGY5ryMNptEJCLm4DqJ-DW1Q0Vn_hk8iaKNd82WjwOh_vF9DfIo"/>
+<div class="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+<div class="absolute bottom-4 left-4 right-4">
+<h3 class="text-white font-bold text-sm">對稱美學</h3>
+<p class="text-xs text-[#ccc] mt-1">@ArchStyle</p>
+</div>
+</div>
+</div>
+</div>
+<div class="mt-16 mb-16 flex justify-center items-center gap-2">
 <button class="flex items-center justify-center size-10 rounded-lg bg-[#1e1e1e] border border-[#2a2a2a] text-[#888] hover:text-primary hover:border-primary transition-all">
 <span class="material-symbols-outlined text-[20px]">chevron_left</span>
 </button>
